@@ -5,6 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,12 +17,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bourg.aws.clients.S3Client;
 import com.bourg.utils.*;
 
 @Controller
 @RequestMapping("/user")
 public class WebHelloWorld {
-
+	
+	@Autowired
+	private S3Client s3Client;
+	
 	@GetMapping(value = "/index")
     public ModelAndView springMvcTest(ModelMap modelMap){
 		String message = "<br><div style='text-align:center;'>"
@@ -49,7 +55,7 @@ public class WebHelloWorld {
 			
 			File conv = convert(file);
 			
-			url = S3ReceiptUtils.loadReceiptToS3File("ambrosebourg.com","tester.jpg", conv);
+			url = s3Client.loadReceiptToS3File("ambrosebourg.com","tester.jpg", conv);
 			
 		}catch(IOException e)
 		{
